@@ -4,6 +4,7 @@ import json
 import os
 import sys
 import requests
+import tldextract
 from getpass import getpass
 from urlparse import urlparse
 from lastpass import (
@@ -36,8 +37,10 @@ def main():
 
     accounts = {}
     for i, acc in enumerate(vault.accounts):
-        uri = urlparse(acc.url)
-        accounts[uri.netloc] = True
+#        uri = urlparse(acc.url)
+	ext = tldextract.extract(acc.url)
+        accounts[ext.registered_domain or acc.url] = True
+#	print "Found {0}".format( ext.registered_domain or acc.url )
 
     with open("leaked_sites.txt", "wb") as f:
         print "Downloading leaked_sites.txt"
